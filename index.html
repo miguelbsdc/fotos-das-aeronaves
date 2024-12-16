@@ -96,23 +96,24 @@
 "PS GPD", "PS GPF", "PS GPG", "PS GPJ", "PS GPK", "PS GPL", "PS GPN", "PS GPO", "PS GPP", "PS GRA", 
 "PS GRB", "PS GRC", "PR GRE", "PS HJF", "PS LBB", "PS LBC", "PS LBE", "PS LBG", "PS LBH", "PS LBI", 
 "PS LBM", "PS LSS", "PS VPA", "PT MEA", "PT MEO", "PT MEY", "PT MTT", "PT MXC", "PT MXD", "PT MXE", 
-"PT MXF", "PT MXH", "PT MXM", "PT MXN", "PT MXO", "PT TMI", "PT TPB", "PT WPP", "PT XPH"
+"PT MXF", "PT MXH", "PT MXM", "PT MXN", "PT MXO", "PT TMI", "PT TPB", "PT WPP", "PT XPH", "PT XPN"
 
         ];
 
-        searchForm.addEventListener('submit', function (event) {
-            event.preventDefault();
+       vsearchForm.addEventListener('submit', function (event) {
+    event.preventDefault();
 
-            const registry = document.getElementById('aircraftRegistry').value.toUpperCase();
+    const registry = document.getElementById('aircraftRegistry').value.toUpperCase();
 
-            if (aircraftPhotos.includes(registry)) {
-                resultDiv.textContent = `Sim! Você tem uma foto registrada para a aeronave ${registry}.`;
-                resultDiv.style.color = "green";
-            } else {
-                resultDiv.textContent = `Não encontramos fotos para a aeronave ${registry}.`;
-                resultDiv.style.color = "red";
-            }
-        });
+    if (aircraftPhotos.includes(registry)) {
+        resultDiv.innerHTML = `Sim! Você tem uma foto registrada para a aeronave ${registry}.<br><a href="https://sistemas.anac.gov.br/aeronaves/cons_rab.asp?textMarca=${registry}" target="_blank">Ver detalhes no RAB</a>`;
+        resultDiv.style.color = "green";
+    } else {
+        resultDiv.innerHTML = `Não encontramos fotos para a aeronave ${registry}.<br><a href="https://sistemas.anac.gov.br/aeronaves/cons_rab.asp?textMarca=${registry}" target="_blank">Ver detalhes no RAB</a>`;
+        resultDiv.style.color = "red";
+    }
+});
+
     </script>
 </body>
 </html>
