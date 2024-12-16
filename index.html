@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscar Registro de Aeronave</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            text-align: center;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 300px;
+        }
+        .container h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Buscar Registro de Aeronave</h1>
+        <form id="searchForm">
+            <input type="text" id="aircraftRegistry" placeholder="Digite o registro" required>
+            <button type="submit">Buscar</button>
+        </form>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        const searchForm = document.getElementById('searchForm');
+        const resultDiv = document.getElementById('result');
+
+        // Exemplo de registros de aeronaves com fotos disponíveis
+        const aircraftPhotos = [
+            "A7 BBH", "CC AZG", "CC AZL", "CC BFD", "CC COH", "CC DCC", "CS TON", "CS TUA", "CS TUB", "CS TUD", 
+"CS TUI", "CS TUJ", "CS TUK", "CS TUM", "CS TUN", "CS TUO", "CS TUP", "CS TUQ", "CS TUS", "ER BYH", 
+"HP 1738CMP", "HP 9902CMP", "HP 9910CMP", "HP 9911CMP", "LV FRQ", "LV FYK", "N192BZ", "N276GX", "N405CB", 
+"N818AV", "N837VA", "N931AV", "N933ER", "N938AV", "PP BIL", "PP EJS", "PP PVF", "PP VCF", "PP VVM", 
+"PR AIN", "PR AIU", "PR AIV", "PR AIW", "PR AJB", "PR AKF", "PR AKM", "PR AKN", "PR AKO", "PR ANB", 
+"PR ANC", "PR ANX", "PR AQA", "PR AQL", "PR AQO", "PR AQQ", "PR AQR", "PR AQV", "PR AQZ", "PR ATV", 
+"PR ATW", "PR AUA", "PR AUC", "PR AUE", "PR AUF", "PR AUJ", "PR AUM", "PR AUP", "PR AUQ", "PR AXC", 
+"PR AXD", "PR AXE", "PR AXF", "PR AXG", "PR AXH", "PR AXI", "PR AXJ", "PR AXN", "PR AXR", "PR AXU", 
+"PR AXX", "PR AXY", "PR AXZ", "PR AYF", "PR AYY", "PR AYZ", "PR GAM", "PR GED", "PR GEI", "PR GEK", 
+"PR GEl", "PR GEQ", "PR GGE", "PR GGK", "PR GGP", "PR GGW", "PR GGZ", "PR GIH", "PR GOQ", "PR GOR", 
+"PR GTC", "PR GTG", "PR GTL", "PR GUA", "PR GUB", "PR GUJ", "PR GUM", "PR GUN", "PR GUP", "PR GUU", 
+"PR GXB", "PR GXD", "PR GXJ", "PR GXP", "PR GXQ", "PR GXR", "PR GXV", "PR GXW", "PR GZI", "PR GZS", 
+"PR GZU", "PR GZW", "PR GZZ", "PR MBH", "PR MBN", "PR MBU", "PR MHF", "PR MHG", "PR MHI", "PR MHU", 
+"PR MHX", "PR MHZ", "PR MYH", "PR MYL", "PR MYO", "PR MYP", "PR MYV", "PR MYW", "PR MYY", "PR PDW", 
+"PR PJN", "PR SHE", "PR THI", "PR TKJ", "PR TKK", "PR TKL", "PR TKM", "PR TQB", "PR TQC", "PR TYA", 
+"PR TYL", "PR TYN", "PR TYS", "PR TYU", "PR VBG", "PR VBL", "PR VBW", "PR VBX", "PR XBA", "PR XBD", 
+"PR XBF", "PR XBG", "PR XBN", "PR XBP", "PR XBR", "PR XMA", "PR XMC", "PR XME", "PR XMF", "PR XMH", 
+"PR XMI", "PR XMM", "PR XMR", "PR XMT", "PR XMW", "PR XMX", "PR YJB", "PR YJE", "PR YRB", "PR YRC", 
+"PR YRD", "PR YRF", "PR YRH", "PR YRI", "PR YRJ", "PR YRL", "PR YRO", "PR YRQ", "PR YRR", "PR YRS", 
+"PR YRT", "PR YRU", "PR YRV", "PR YRW", "PR YRX", "PR YRY", "PR YSA", "PR YSB", "PR YSC", "PR YSE", 
+"PR YSF", "PR YSG", "PR YSH", "PR YSI", "PR YSK", "PR YSL", "PR YSN", "PR YSP", "PR YSQ", "PR YSR", 
+"PR YXA", "PR YXC", "PR YXD", "PR YXT", "PR YYB", "PR YYD", "PR YYF", "PR YYG", "PR YYI", "PS AEA", 
+"PS AEB", "PS AEC", "PS AED", "PS AEE", "PS AEF", "PS AEH", "PS AEI", "PS AEJ", "PS AEL", "PS AEM", 
+"PS AEN", "PS AEO", "PS AEP", "PS AEQ", "PS AER", "PS AES", "PS AEU", "PS AEV", "PS AEW", "PS AEX", 
+"PS AEY", "PS AJA", "PS CNA", "PS CNF", "PS CNT", "PS FST", "PS GFA", "PS GOL", "PS GPA", "PS GPC", 
+"PS GPD", "PS GPF", "PS GPG", "PS GPJ", "PS GPK", "PS GPL", "PS GPN", "PS GPO", "PS GPP", "PS GRA", 
+"PS GRB", "PS GRC", "PR GRE", "PS HJF", "PS LBB", "PS LBC", "PS LBE", "PS LBG", "PS LBH", "PS LBI", 
+"PS LBM", "PS LSS", "PS VPA", "PT MEA", "PT MEO", "PT MEY", "PT MTT", "PT MXC", "PT MXD", "PT MXE", 
+"PT MXF", "PT MXH", "PT MXM", "PT MXN", "PT MXO", "PT TMI", "PT TPB", "PT WPP", "PT XPH"
+
+        ];
+
+        searchForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const registry = document.getElementById('aircraftRegistry').value.toUpperCase();
+
+            if (aircraftPhotos.includes(registry)) {
+                resultDiv.textContent = `Sim! Você tem uma foto registrada para a aeronave ${registry}.`;
+                resultDiv.style.color = "green";
+            } else {
+                resultDiv.textContent = `Não encontramos fotos para a aeronave ${registry}.`;
+                resultDiv.style.color = "red";
+            }
+        });
+    </script>
+</body>
+</html>
